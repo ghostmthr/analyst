@@ -1,0 +1,790 @@
+/* ANALYST — global design tokens and base styles */
+
+:root {
+  --bg: #2D3741;
+  --panel: #3C4855;
+  --border: #5A7291;
+  --blue: #29A9E0;
+  --green: #03B791;
+  --text: #E8EDF5;
+  --danger: #b91c1c;
+  --danger-bg: rgba(185, 28, 28, 0.15);
+  --danger-muted: rgba(185, 28, 28, 0.15);
+  --danger-text: #b91c1c;
+  --text-muted: #9CA3AF;
+  --text-secondary: #9CA3AF;
+  --warning: #5A7291;
+  --warning-muted: var(--panel);
+  --warning-text: var(--text);
+  --accent: var(--blue);
+  --info: var(--blue);
+  --info-muted: var(--panel);
+  --info-text: var(--blue);
+  --success-text: var(--green);
+  --bg-base: var(--bg);
+
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --radius: 6px;
+  --input-height: 48px;
+  --btn-height: 44px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* No default gradients/shadows on main surfaces */
+body, .analyst-app, .analyst-page, .analyst-panel {
+  box-shadow: none;
+  background-image: none;
+}
+
+button,
+input,
+select,
+textarea,
+table,
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-mono);
+}
+
+a {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+:focus-visible {
+  outline: 2px solid var(--border);
+  outline-offset: 2px;
+}
+
+/* Single border for inputs on focus — no outline (avoids double border) */
+input:focus,
+input:focus-visible,
+select:focus,
+select:focus-visible,
+textarea:focus,
+textarea:focus-visible {
+  outline: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+/* ——— Base: Buttons ——— */
+button,
+[role="button"] {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  min-height: var(--btn-height);
+  padding: 0 20px;
+  border-radius: var(--radius);
+  border: none;
+}
+
+/* Primary: blue background, white text — shared layout so <button> and <a> look the same */
+.analyst-btnPrimary,
+button.analyst-btnPrimary,
+.analyst-button--primary,
+a.analyst-btnPrimary {
+  min-height: var(--btn-height);
+  padding: 0 20px;
+  border-radius: var(--radius);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  background: var(--blue);
+  color: #fff;
+  border: 1px solid var(--blue);
+}
+
+.analyst-btnPrimary:hover:not(:disabled),
+.analyst-button--primary:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+/* Danger: red background, white text */
+.analyst-btnDanger,
+button.analyst-btnDanger,
+.analyst-button--danger {
+  background: var(--danger);
+  color: #fff;
+  border: 1px solid var(--danger);
+}
+
+.analyst-btnDanger:hover:not(:disabled),
+.analyst-button--danger:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+/* Secondary: outlined / neutral */
+.analyst-btnSecondary,
+.analyst-button {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.analyst-btnSecondary:hover:not(:disabled),
+.analyst-button:hover:not(:disabled) {
+  background: var(--border);
+}
+
+.analyst-btnSecondary:disabled,
+.analyst-button:disabled,
+.analyst-btnPrimary:disabled,
+.analyst-btnDanger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ——— Base: Inputs / Selects ——— */
+input,
+select,
+textarea,
+.analyst-input,
+.analyst-select {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--radius);
+  min-height: var(--input-height);
+  padding: 12px 14px;
+  font-family: var(--font-mono);
+}
+
+/* Single select: custom chevron aligned vertically (no browser default arrow) */
+select:not([multiple]) {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239CA3AF' d='M2.5 4.5L6 8l3.5-3.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.analyst-input::placeholder,
+.analyst-select::placeholder,
+input::placeholder,
+textarea::placeholder {
+  color: var(--border);
+  opacity: 0.9;
+}
+
+.analyst-input:focus,
+.analyst-select:focus,
+.analyst-input:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--blue);
+  outline: none;
+}
+
+/* Date inputs: calendar icon same as text color (light on dark theme) */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.9;
+}
+
+/* ——— Base: Panels ——— */
+.analyst-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+/* ——— Base: Tables ——— */
+.analyst-tableWrap,
+.analyst-table-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.analyst-table,
+.analyst-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+.analyst-th,
+.analyst-table th,
+.analyst-table th {
+  background: #3C4855;
+  padding: 12px 14px;
+  text-align: left;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+/* Rounded top corners on first header row only (same radius as filter boxes) */
+.analyst-tableWrap .analyst-table thead tr:first-child th:first-child,
+.analyst-tableWrap .analyst-table thead tr:first-child th:first-child,
+.analyst-table-wrap .analyst-table thead tr:first-child th:first-child,
+.analyst-table-wrap .analyst-table thead tr:first-child th:first-child {
+  border-top-left-radius: var(--radius);
+}
+
+.analyst-tableWrap .analyst-table thead tr:first-child th:last-child,
+.analyst-tableWrap .analyst-table thead tr:first-child th:last-child,
+.analyst-table-wrap .analyst-table thead tr:first-child th:last-child,
+.analyst-table-wrap .analyst-table thead tr:first-child th:last-child {
+  border-top-right-radius: var(--radius);
+}
+
+.analyst-td,
+.analyst-table td,
+.analyst-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.analyst-row,
+.analyst-table tbody tr,
+.analyst-table tbody tr {
+  border-bottom: 1px solid var(--border);
+}
+
+.analyst-table tbody tr:last-child td,
+.analyst-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.analyst-table tbody tr:hover {
+  background: rgba(90, 114, 145, 0.15);
+}
+
+.analyst-table code,
+.analyst-mono,
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+/* Tab row matching table header design (e.g. target profile: Profile, Identifiers, Evidence, Claims, Links) */
+.analyst-tabRow {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #3C4855;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  overflow: hidden;
+}
+
+.analyst-tabRow button {
+  padding: 12px 14px;
+  font-weight: 700;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  min-height: unset;
+  cursor: pointer;
+}
+
+.analyst-tabRow button:hover {
+  color: var(--blue);
+}
+
+.analyst-tabRow button[data-active="true"] {
+  color: var(--blue);
+}
+
+/* Form content panel (Target Profile and other forms): #3C4855 background, same radius as tables/filters */
+.analyst-formPanel {
+  background: #3C4855;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-top: 16px;
+  margin-bottom: 24px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--font-mono);
+}
+
+/* ——— Required: Layout ——— */
+.analyst-page {
+  padding: 24px;
+  max-width: 100%;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.analyst-pageTitle {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 24px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.analyst-sectionTitle {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.analyst-toolbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* Filter row controls: search input + selects (e.g. Targets page) */
+.analyst-filterControl,
+input.analyst-filterControl,
+select.analyst-filterControl {
+  background: #3C4855;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  min-height: var(--input-height);
+  padding: 0 14px;
+  font-family: var(--font-mono);
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.analyst-filterControl::placeholder {
+  color: var(--text);
+}
+
+.analyst-filterControl:focus {
+  border-color: var(--blue);
+  outline: none;
+}
+
+select.analyst-filterControl {
+  padding-right: 32px;
+  appearance: none;
+  background-color: #3C4855;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239CA3AF' d='M2.5 4.5L6 8l3.5-3.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.analyst-spacer {
+  margin-bottom: 24px;
+}
+
+/* ——— Application shell (topbar + breadcrumb) ——— */
+.analyst-topbar {
+  height: 84px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 32px;
+  flex-shrink: 0;
+}
+
+.analyst-brand {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.analyst-topnav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.analyst-topnavItem {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+}
+
+.analyst-topnavItem:hover {
+  color: var(--blue);
+}
+
+.analyst-topnavItemActive {
+  color: var(--blue);
+}
+
+.analyst-breadcrumbBar {
+  background: var(--bg);
+  padding: 10px 24px;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  border-bottom: none;
+  flex-shrink: 0;
+}
+
+.analyst-breadcrumbLink {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.analyst-breadcrumbLink:hover {
+  text-decoration: underline;
+}
+
+.analyst-breadcrumbActive {
+  color: var(--blue);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* ——— App shell (body wrapper) ——— */
+.analyst-app {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-family: var(--font-mono);
+}
+
+/* Spinner (keep for loading states) */
+.analyst-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: analyst-spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+@keyframes analyst-spin {
+  to { transform: rotate(360deg); }
+}
+
+[data-analyst-id] {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+/* ——— Page header (detail pages: back link + title + subtitle) ——— */
+.analyst-pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.analyst-pageHeaderBlock {
+  margin-bottom: 24px;
+}
+
+.analyst-backLink {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.analyst-pageTitleInPage {
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+.analyst-pageSubtitle {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* ——— Section spacing ——— */
+.analyst-gap24 { margin-bottom: 24px; }
+.analyst-gap16 { margin-bottom: 16px; }
+.analyst-gap12 { margin-bottom: 12px; }
+.analyst-gap32 { margin-bottom: 32px; }
+
+.analyst-h2Section {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.analyst-h3Sub {
+  margin-bottom: 12px;
+}
+
+/* ——— Muted / secondary text ——— */
+.analyst-textSecondary {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.analyst-textSecondary.analyst-gap12 { margin-bottom: 12px; }
+.analyst-textSecondary.analyst-mt12 { margin-top: 12px; }
+
+.analyst-monoSmall {
+  font-size: 12px;
+}
+
+/* ——— Filter bar (search + selects row) ——— */
+.analyst-filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* ——— Action row (buttons / links in a row) ——— */
+.analyst-actionsRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.analyst-actionsRowTight {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+/* ——— Form: label + input group ——— */
+.analyst-formLabel {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.analyst-formInput {
+  width: 100%;
+  padding: 8px 12px;
+}
+
+.analyst-formStack {
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ——— Message boxes (danger, success, warn) ——— */
+.analyst-messageDanger {
+  padding: 12px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  border-radius: 4px;
+}
+
+.analyst-messageSuccess {
+  padding: 12px;
+  background: var(--panel);
+  border: 1px solid var(--green);
+  color: var(--green);
+  border-radius: 4px;
+}
+
+.analyst-panelWarn {
+  background: var(--warning-muted);
+  border-color: var(--warning);
+  color: var(--warning-text);
+}
+
+.analyst-panelDanger {
+  background: var(--danger-muted);
+  border-color: var(--danger);
+  color: var(--danger-text);
+}
+
+/* ——— Modal overlay + content ——— */
+.analyst-modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.analyst-modalContent {
+  background: var(--panel);
+  padding: 24px;
+  border-radius: 8px;
+  max-width: 420px;
+  width: 100%;
+}
+
+.analyst-modalContentWide {
+  max-width: 480px;
+}
+
+.analyst-modalContentScroll {
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.analyst-modalTitle {
+  margin-top: 0;
+}
+
+/* ——— Detail sidebar (map/network side panel) ——— */
+.analyst-detailSidebar {
+  width: 320px;
+  border-left: 1px solid var(--border);
+  padding: 16px;
+  overflow: auto;
+  background: var(--panel);
+}
+
+/* ——— App shell layout ——— */
+.analyst-app.analyst-app--column {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.analyst-main {
+  flex: 1;
+  overflow: auto;
+}
+
+.analyst-breadcrumbSep {
+  margin-right: 8px;
+  color: var(--text);
+}
+
+.analyst-breadcrumbDivider {
+  margin: 0 8px;
+  color: var(--border);
+}
+
+/* ——— Empty state block ——— */
+.analyst-emptyState {
+  padding: 24px;
+  background: var(--panel);
+  border-radius: 4px;
+  color: var(--text-muted);
+}
+
+/* Empty table cell (no panel background) */
+.analyst-emptyCell {
+  padding: 24px;
+  color: var(--text-muted);
+}
+
+/* ——— Checkbox label row (filter bar) ——— */
+.analyst-checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.analyst-checkboxRowGap8 {
+  gap: 8px;
+}
+
+.analyst-labelText {
+  font-size: 14px;
+}
+
+/* ——— List reset + chip row (entity/event list items) ——— */
+.analyst-listReset {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.analyst-chipRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+/* ——— Detail line (pin/entity metadata) ——— */
+.analyst-detailLine {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+
+.analyst-detailLineMuted {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.analyst-detailLineSmall {
+  margin: 0 0 8px;
+  font-size: 13px;
+}
+
+.analyst-detailLineSmallMuted {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ——— Utility: margin top ——— */
+.analyst-mt12 { margin-top: 12px; }
+.analyst-mr8 { margin-right: 8px; }
+.analyst-mr12 { margin-right: 12px; }
