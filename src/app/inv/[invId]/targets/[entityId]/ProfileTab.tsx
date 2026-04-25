@@ -65,13 +65,7 @@ export default function ProfileTab({
   const [currentOrgId, setCurrentOrgId] = useState(
     entity.attributes?.current_organization_entity_id ?? ""
   );
-  const [lastActivity, setLastActivity] = useState(
-    entity.attributes?.last_confirmed_activity ?? ""
-  );
   const [ein, setEin] = useState(entity.attributes?.ein ?? "");
-  const [incorporationDate, setIncorporationDate] = useState(
-    entity.attributes?.incorporation_date ?? ""
-  );
   const [companyType, setCompanyType] = useState(entity.attributes?.company_type ?? "");
   const [riskTags, setRiskTags] = useState<string[]>(
     entity.risk_tags ?? []
@@ -111,9 +105,7 @@ export default function ProfileTab({
           nationality_iso: isOrganization ? undefined : nationalityIso.trim() || undefined,
           current_role: isOrganization ? undefined : currentRole.trim() || undefined,
           current_organization_entity_id: isOrganization ? undefined : currentOrgId || undefined,
-          last_confirmed_activity: lastActivity.trim() || undefined,
           ein: isOrganization ? ein.trim() || undefined : undefined,
-          incorporation_date: isOrganization ? incorporationDate.trim() || undefined : undefined,
           company_type: isOrganization ? companyType.trim() || undefined : undefined,
         },
         risk_tags: riskTags,
@@ -272,15 +264,6 @@ export default function ProfileTab({
               />
             </div>
             <div>
-              <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Incorporation date</label>
-              <input
-                type="date"
-                value={incorporationDate}
-                onChange={(e) => setIncorporationDate(e.target.value)}
-                style={{ width: "100%", padding: "8px 12px" }}
-              />
-            </div>
-            <div>
               <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Company type</label>
               <select
                 value={companyType}
@@ -297,15 +280,6 @@ export default function ProfileTab({
             </div>
           </>
         )}
-        <div>
-          <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Last confirmed activity</label>
-          <input
-            type="date"
-            value={lastActivity}
-            onChange={(e) => setLastActivity(e.target.value)}
-            style={{ width: "100%", padding: "8px 12px" }}
-          />
-        </div>
         <div>
           <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>FLAGS / RISK FLAGS</label>
           <RiskTagChips
