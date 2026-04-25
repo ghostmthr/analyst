@@ -23,6 +23,9 @@ export interface CreateEntityInput {
     current_role?: string;
     current_organization_entity_id?: string;
     last_confirmed_activity?: string;
+    ein?: string;
+    incorporation_date?: string;
+    company_type?: string;
   };
   risk_tags?: string[];
   evidence_ids?: string[];

@@ -72,6 +72,9 @@ export interface Entity {
     current_role?: string;
     current_organization_entity_id?: string;
     last_confirmed_activity?: ISODate;
+    ein?: string;
+    incorporation_date?: ISODate;
+    company_type?: string;
   };
   risk_tags?: string[];
   locations?: LocationRef[];

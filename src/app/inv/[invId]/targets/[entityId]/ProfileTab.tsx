@@ -40,6 +40,17 @@ export default function ProfileTab({
   onUpdateLocation,
   onNavigateBack,
 }: ProfileTabProps) {
+  const COMPANY_TYPE_OPTIONS = [
+    "C Corporation",
+    "S Corporation",
+    "LLC",
+    "Partnership",
+    "Sole Proprietorship",
+    "Nonprofit 501(c)(3)",
+    "Public Benefit Corporation",
+    "Other",
+  ] as const;
+
   const [saving, setSaving] = useState(false);
   const [type, setType] = useState<EntityType>(entity.type);
   const [name, setName] = useState(entity.name);
@@ -57,6 +68,11 @@ export default function ProfileTab({
   const [lastActivity, setLastActivity] = useState(
     entity.attributes?.last_confirmed_activity ?? ""
   );
+  const [ein, setEin] = useState(entity.attributes?.ein ?? "");
+  const [incorporationDate, setIncorporationDate] = useState(
+    entity.attributes?.incorporation_date ?? ""
+  );
+  const [companyType, setCompanyType] = useState(entity.attributes?.company_type ?? "");
   const [riskTags, setRiskTags] = useState<string[]>(
     entity.risk_tags ?? []
   );
@@ -79,6 +95,7 @@ export default function ProfileTab({
   const [savingLoc, setSavingLoc] = useState(false);
   const [profileError, setProfileError] = useState("");
   const [profileSaved, setProfileSaved] = useState(false);
+  const isOrganization = type === "ORG";
 
   const handleSave = async () => {
     setProfileError("");
@@ -91,10 +108,13 @@ export default function ProfileTab({
         description: description.trim() || undefined,
         summary: summary.trim() || undefined,
         attributes: {
-          nationality_iso: nationalityIso.trim() || undefined,
-          current_role: currentRole.trim() || undefined,
-          current_organization_entity_id: currentOrgId || undefined,
+          nationality_iso: isOrganization ? undefined : nationalityIso.trim() || undefined,
+          current_role: isOrganization ? undefined : currentRole.trim() || undefined,
+          current_organization_entity_id: isOrganization ? undefined : currentOrgId || undefined,
           last_confirmed_activity: lastActivity.trim() || undefined,
+          ein: isOrganization ? ein.trim() || undefined : undefined,
+          incorporation_date: isOrganization ? incorporationDate.trim() || undefined : undefined,
+          company_type: isOrganization ? companyType.trim() || undefined : undefined,
         },
         risk_tags: riskTags,
         image_evidence_ids: imageEvidenceIds.length ? imageEvidenceIds : undefined,
@@ -203,38 +223,80 @@ export default function ProfileTab({
             style={{ width: "100%", padding: "8px 12px" }}
           />
         </div>
-        <div>
-          <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Nationality (ISO)</label>
-          <input
-            type="text"
-            value={nationalityIso}
-            onChange={(e) => setNationalityIso(e.target.value)}
-            placeholder="e.g. US"
-            style={{ width: "100%", padding: "8px 12px" }}
-          />
-        </div>
-        <div>
-          <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Current role</label>
-          <input
-            type="text"
-            value={currentRole}
-            onChange={(e) => setCurrentRole(e.target.value)}
-            style={{ width: "100%", padding: "8px 12px" }}
-          />
-        </div>
-        <div>
-          <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Current organization</label>
-          <select
-            value={currentOrgId}
-            onChange={(e) => setCurrentOrgId(e.target.value)}
-            style={{ width: "100%" }}
-          >
-            <option value="">—</option>
-            {orgEntities.map((o) => (
-              <option key={o.id} value={o.id}>{o.name}</option>
-            ))}
-          </select>
-        </div>
+        {!isOrganization && (
+          <>
+            <div>
+              <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Nationality (ISO)</label>
+              <input
+                type="text"
+                value={nationalityIso}
+                onChange={(e) => setNationalityIso(e.target.value)}
+                placeholder="e.g. US"
+                style={{ width: "100%", padding: "8px 12px" }}
+              />
+            </div>
+            <div>
+              <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Current role</label>
+              <input
+                type="text"
+                value={currentRole}
+                onChange={(e) => setCurrentRole(e.target.value)}
+                style={{ width: "100%", padding: "8px 12px" }}
+              />
+            </div>
+            <div>
+              <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Current organization</label>
+              <select
+                value={currentOrgId}
+                onChange={(e) => setCurrentOrgId(e.target.value)}
+                style={{ width: "100%" }}
+              >
+                <option value="">—</option>
+                {orgEntities.map((o) => (
+                  <option key={o.id} value={o.id}>{o.name}</option>
+                ))}
+              </select>
+            </div>
+          </>
+        )}
+        {isOrganization && (
+          <>
+            <div>
+              <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>EIN</label>
+              <input
+                type="text"
+                value={ein}
+                onChange={(e) => setEin(e.target.value)}
+                placeholder="e.g. 12-3456789"
+                style={{ width: "100%", padding: "8px 12px" }}
+              />
+            </div>
+            <div>
+              <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Incorporation date</label>
+              <input
+                type="date"
+                value={incorporationDate}
+                onChange={(e) => setIncorporationDate(e.target.value)}
+                style={{ width: "100%", padding: "8px 12px" }}
+              />
+            </div>
+            <div>
+              <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Company type</label>
+              <select
+                value={companyType}
+                onChange={(e) => setCompanyType(e.target.value)}
+                style={{ width: "100%" }}
+              >
+                <option value="">—</option>
+                {COMPANY_TYPE_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </>
+        )}
         <div>
           <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Last confirmed activity</label>
           <input
