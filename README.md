@@ -1,6 +1,6 @@
 # ANALYST
 
-<img width="1920" height="1080" alt="Dashboard" src="https://github.com/user-attachments/assets/2982b533-9af9-42cd-b7db-365452f7f588" />
+<img width="1920" height="1537" alt="Network" src="https://github.com/user-attachments/assets/77bb4383-d950-4e96-b2eb-bee9b4f9e31f" />
 
 **ANALYST** is an investigative analysis platform for structuring, mapping, and analyzing complex intelligence investigations.
 
@@ -11,6 +11,8 @@ It provides analysts with a system to:
 - perform geospatial and network analysis
 - maintain auditable investigative workflows
 - produce structured intelligence assessments
+
+<img width="1920" height="2745" alt="Add Target" src="https://github.com/user-attachments/assets/77c5b233-c59c-4d29-bcd0-0b1a2a72d7a9" />
 
 The platform is designed to support investigative disciplines including:
 
@@ -23,6 +25,8 @@ The platform is designed to support investigative disciplines including:
 
 ANALYST emphasizes **structured analysis over document chaos**.  
 Instead of scattered notes and files, investigations are represented as **linked analytical objects**.
+
+<img width="1920" height="1373" alt="Add Identifiers" src="https://github.com/user-attachments/assets/80b58805-049e-408f-be51-c4ea0b8de1a9" />
 
 ---
 
@@ -164,19 +168,6 @@ exports/
 
 
 `case.json` contains the structured representation of the entire investigation.
-
-<img width="1920" height="1537" alt="Network" src="https://github.com/user-attachments/assets/77bb4383-d950-4e96-b2eb-bee9b4f9e31f" />
-<img width="1920" height="1214" alt="Claims List" src="https://github.com/user-attachments/assets/e9dbf251-1a47-44a8-a14c-d5608b82b236" />
-<img width="1920" height="1214" alt="Claims List" src="https://github.com/user-attachments/assets/78fee314-c8b4-46a6-9b38-ec56fc55eddb" />
-<img width="1920" height="2096" alt="Add Links" src="https://github.com/user-attachments/assets/7fb51fd7-5204-46c7-b080-51ae27316484" />
-<img width="1920" height="1131" alt="Links List" src="https://github.com/user-attachments/assets/99787b8c-0e5e-4c55-be83-e0ec374d7683" />
-<img width="1920" height="1373" alt="Add Identifiers" src="https://github.com/user-attachments/assets/80b58805-049e-408f-be51-c4ea0b8de1a9" />
-<img width="1920" height="1214" alt="Identifiers List" src="https://github.com/user-attachments/assets/35796415-db60-4434-852e-ec66bd1a2eb3" />
-<img width="1920" height="1761" alt="Add Evidence" src="https://github.com/user-attachments/assets/bb3e174b-924e-4f3e-b865-aaf78ef9f23d" />
-<img width="1920" height="1220" alt="Events List" src="https://github.com/user-attachments/assets/d1f288c2-d236-453a-88e4-a51f9feea205" />
-<img width="1920" height="2745" alt="Add Target" src="https://github.com/user-attachments/assets/77c5b233-c59c-4d29-bcd0-0b1a2a72d7a9" />
-<img width="1920" height="1127" alt="Timeline" src="https://github.com/user-attachments/assets/1fda9986-808f-41ac-ab52-81f6460f71c8" />
-<img width="1920" height="1080" alt="Target List" src="https://github.com/user-attachments/assets/4fa4e1d2-499a-464f-ba22-ae24b9e79017" />
 
 
 ---
