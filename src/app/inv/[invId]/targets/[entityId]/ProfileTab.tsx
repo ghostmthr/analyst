@@ -89,6 +89,7 @@ export default function ProfileTab({
   const [savingLoc, setSavingLoc] = useState(false);
   const [profileError, setProfileError] = useState("");
   const [profileSaved, setProfileSaved] = useState(false);
+  const isPerson = type === "PERSON";
   const isOrganization = type === "ORG";
 
   const handleSave = async () => {
@@ -102,8 +103,8 @@ export default function ProfileTab({
         description: description.trim() || undefined,
         summary: summary.trim() || undefined,
         attributes: {
-          nationality_iso: isOrganization ? undefined : nationalityIso.trim() || undefined,
-          current_role: isOrganization ? undefined : currentRole.trim() || undefined,
+          nationality_iso: isPerson ? nationalityIso.trim() || undefined : undefined,
+          current_role: isPerson ? currentRole.trim() || undefined : undefined,
           current_organization_entity_id: isOrganization ? undefined : currentOrgId || undefined,
           ein: isOrganization ? ein.trim() || undefined : undefined,
           company_type: isOrganization ? companyType.trim() || undefined : undefined,
@@ -215,7 +216,7 @@ export default function ProfileTab({
             style={{ width: "100%", padding: "8px 12px" }}
           />
         </div>
-        {!isOrganization && (
+        {isPerson && (
           <>
             <div>
               <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Nationality (ISO)</label>
@@ -236,6 +237,10 @@ export default function ProfileTab({
                 style={{ width: "100%", padding: "8px 12px" }}
               />
             </div>
+          </>
+        )}
+        {!isOrganization && (
+          <>
             <div>
               <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Current organization</label>
               <select

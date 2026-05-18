@@ -117,6 +117,8 @@ export const TAXONOMY = {
 
   evidenceSourceTypes: [
     { key: "SEC" as const, label: "SEC Filing" },
+    { key: "IRS_FILING" as const, label: "IRS Filing" },
+    { key: "GOV_CORRESPONDENCE" as const, label: "Government Correspondence" },
     { key: "WEBSITE" as const, label: "Company Website" },
     { key: "SOCIAL" as const, label: "Social Media" },
     { key: "FOIA" as const, label: "FOIA" },

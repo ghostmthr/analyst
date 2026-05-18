@@ -144,6 +144,8 @@ export interface Identifier {
 export type EvidenceType = "DOCUMENT" | "IMAGE" | "VIDEO" | "WEB_CAPTURE" | "OTHER";
 export type EvidenceSourceType =
   | "SEC"
+  | "IRS_FILING"
+  | "GOV_CORRESPONDENCE"
   | "WEBSITE"
   | "SOCIAL"
   | "FOIA"
