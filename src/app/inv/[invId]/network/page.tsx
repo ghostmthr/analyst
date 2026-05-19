@@ -27,7 +27,9 @@ const ENTITY_NODE_COLORS: Record<string, { base: string; dark: string }> = {
 const DEFAULT_NODE_COLOR = "#29A9E0";
 const DEFAULT_NODE_DARK = "#1a7a9e";
 
-const BASE_NODE_SIZE = 24;
+const BASE_NODE_SIZE = 14;
+const BASE_EDGE_WIDTH = 1;
+const EDGE_ARROW_SCALE = 0.85;
 
 const LAYOUT_OPTIONS: { value: string; label: string }[] = [
   { value: "breadthfirst", label: "Hierarchy" },
@@ -51,21 +53,21 @@ function getLayoutOptions(layoutName: string, animate: boolean) {
       ...base,
       name: "concentric",
       sort: (a: { degree: () => number }, b: { degree: () => number }) => b.degree() - a.degree(),
-      minNodeSpacing: 60,
+      minNodeSpacing: 36,
       equidistant: true,
     };
   }
   if (layoutName === "concentric") {
-    return { ...base, name: "concentric", minNodeSpacing: 60, equidistant: true };
+    return { ...base, name: "concentric", minNodeSpacing: 36, equidistant: true };
   }
   if (layoutName === "cose") {
     return {
       ...base,
       name: "cose",
-      idealEdgeLength: 150,
-      nodeRepulsion: 12000,
-      nodeOverlap: 30,
-      componentSpacing: 80,
+      idealEdgeLength: 90,
+      nodeRepulsion: 8000,
+      nodeOverlap: 16,
+      componentSpacing: 50,
       numIter: 1000,
     };
   }
@@ -172,8 +174,9 @@ export default function NetworkPage() {
               label: "data(label)",
               "text-valign": "bottom",
               "text-halign": "center",
-              "text-margin-y": 4,
-              "font-size": "5px",
+              "text-margin-y": 3,
+              "font-size": "6px",
+              "font-weight": "bold",
               color: "#E8EDF5",
               "overlay-opacity": 0,
               "overlay-color": "transparent",
@@ -211,7 +214,10 @@ export default function NetworkPage() {
             style: {
               width: (ele: { data: () => { evidence_backed?: boolean; source_kind?: string; confidence_score?: number } }) => {
                 const d = ele.data();
-                const base = d.evidence_backed && d.source_kind === "EVIDENCE" ? 2 : 1;
+                const base =
+                  d.evidence_backed && d.source_kind === "EVIDENCE"
+                    ? BASE_EDGE_WIDTH * 1.25
+                    : BASE_EDGE_WIDTH * 0.75;
                 return base * (0.5 + (d.confidence_score ?? 0));
               },
               "line-style": (ele: { data: () => { evidence_backed?: boolean; source_kind?: string } }) => {
@@ -221,18 +227,18 @@ export default function NetworkPage() {
               opacity: (ele: { data: () => { confidence_score?: number } }) =>
                 0.4 + 0.6 * (ele.data().confidence_score ?? 0),
               "target-arrow-shape": "triangle",
-              "arrow-scale": 2.5,
+              "arrow-scale": EDGE_ARROW_SCALE,
               "curve-style": "bezier",
               label: "data(label)",
-              "font-size": "6px",
+              "font-size": "5px",
               color: "#E8EDF5",
               "text-rotation": "autorotate",
               "text-valign": "bottom",
-              "text-max-width": "90px",
+              "text-max-width": "72px",
               "text-wrap": "wrap",
               "text-background-color": "#2d3741",
               "text-background-opacity": 1,
-              "text-background-padding": "4px",
+              "text-background-padding": "2px",
               "text-background-shape": "roundrectangle",
             },
           },
