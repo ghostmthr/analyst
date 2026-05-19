@@ -7,7 +7,7 @@ import { useEffect,useMemo, useState } from "react";
 import EventsTable from "@/components/EventsTable";
 import { useCase } from "@/contexts/CaseContext";
 import { isEvidenceBacked } from "@/lib/evidence";
-import { EVENT_TYPE_OPTIONS, displayEventType } from "@/lib/labelRegistry";
+import { EVENT_TYPE_OPTIONS } from "@/lib/labelRegistry";
 import type { EventType } from "@/types";
 
 type SortOrder = "newest" | "oldest";

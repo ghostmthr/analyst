@@ -6,13 +6,13 @@ import AnalystModal from "@/components/AnalystModal";
 import EvidenceBackedBadge from "@/components/EvidenceBackedBadge";
 import RiskTagChips from "@/components/RiskTagChips";
 import { isAssertionEvidenceBacked } from "@/lib/derived";
+import type { UpdateEntityLocationPatch,UpdateEntityPatch } from "@/lib/entities";
 import {
   readOrganizationIds,
   readRoles,
   writeOrganizationIds,
   writeStringList,
 } from "@/lib/entityAttributes";
-import type { UpdateEntityLocationPatch,UpdateEntityPatch } from "@/lib/entities";
 import { newId, nowUtc } from "@/lib/ids";
 import { ENTITY_TYPE_OPTIONS } from "@/lib/labelRegistry";
 import type { CaseFile, Entity, EntityType, Evidence, LocationRef } from "@/types";
