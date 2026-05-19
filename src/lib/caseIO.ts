@@ -222,6 +222,11 @@ export async function loadCase(
   const data = await readCaseJson(dir);
   await ensureCaseFiles(dir);
   const now = nowUtc();
+  const investigations = (data.investigations ?? []).map((inv) => ({
+    ...inv,
+    created_at: inv.created_at ?? inv.updated_at ?? now,
+    updated_at: inv.updated_at ?? inv.created_at ?? now,
+  }));
   const events = (data.events ?? []).map((e) => ({
     ...e,
     created_at: e.created_at ?? e.updated_at ?? now,
@@ -235,6 +240,7 @@ export async function loadCase(
   }));
   return {
     ...data,
+    investigations,
     events,
     analysis: { ...analysis, diagnostic_claims },
   };

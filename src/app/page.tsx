@@ -144,7 +144,7 @@ export default function HomePage() {
                 {inv.title}
               </Link>
               <span className="analyst-detailLineMuted" style={{ fontSize: 12, display: "block" }}>
-                {inv.status} · {inv.updated_at.slice(0, 10)}
+                {inv.status} · {(inv.updated_at ?? inv.created_at ?? "").slice(0, 10)}
                 {inv.lead ? ` · ${inv.lead}` : ""}
               </span>
             </li>
