@@ -6,6 +6,12 @@ import AnalystModal from "@/components/AnalystModal";
 import EvidenceBackedBadge from "@/components/EvidenceBackedBadge";
 import RiskTagChips from "@/components/RiskTagChips";
 import { isAssertionEvidenceBacked } from "@/lib/derived";
+import {
+  readOrganizationIds,
+  readRoles,
+  writeOrganizationIds,
+  writeStringList,
+} from "@/lib/entityAttributes";
 import type { UpdateEntityLocationPatch,UpdateEntityPatch } from "@/lib/entities";
 import { newId, nowUtc } from "@/lib/ids";
 import { ENTITY_TYPE_OPTIONS } from "@/lib/labelRegistry";
@@ -59,11 +65,12 @@ export default function ProfileTab({
   const [nationalityIso, setNationalityIso] = useState(
     entity.attributes?.nationality_iso ?? ""
   );
-  const [currentRole, setCurrentRole] = useState(
-    entity.attributes?.current_role ?? ""
-  );
-  const [currentOrgId, setCurrentOrgId] = useState(
-    entity.attributes?.current_organization_entity_id ?? ""
+  const [roles, setRoles] = useState<string[]>(() => {
+    const existing = readRoles(entity.attributes);
+    return existing.length ? existing : [""];
+  });
+  const [organizationIds, setOrganizationIds] = useState<string[]>(() =>
+    readOrganizationIds(entity.attributes)
   );
   const [ein, setEin] = useState(entity.attributes?.ein ?? "");
   const [companyType, setCompanyType] = useState(entity.attributes?.company_type ?? "");
@@ -104,8 +111,10 @@ export default function ProfileTab({
         summary: summary.trim() || undefined,
         attributes: {
           nationality_iso: isPerson ? nationalityIso.trim() || undefined : undefined,
-          current_role: isPerson ? currentRole.trim() || undefined : undefined,
-          current_organization_entity_id: isOrganization ? undefined : currentOrgId || undefined,
+          roles: isPerson ? writeStringList(roles) : undefined,
+          current_organization_entity_ids: isOrganization
+            ? undefined
+            : writeOrganizationIds(organizationIds),
           ein: isOrganization ? ein.trim() || undefined : undefined,
           company_type: isOrganization ? companyType.trim() || undefined : undefined,
         },
@@ -229,30 +238,100 @@ export default function ProfileTab({
               />
             </div>
             <div>
-              <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Current role</label>
-              <input
-                type="text"
-                value={currentRole}
-                onChange={(e) => setCurrentRole(e.target.value)}
-                style={{ width: "100%", padding: "8px 12px" }}
-              />
+              <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Roles</label>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {roles.map((role, index) => (
+                  <div key={index} style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                    <input
+                      type="text"
+                      value={role}
+                      onChange={(e) =>
+                        setRoles((prev) =>
+                          prev.map((r, i) => (i === index ? e.target.value : r))
+                        )
+                      }
+                      placeholder="e.g. CEO"
+                      style={{ flex: 1, padding: "8px 12px" }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setRoles((prev) =>
+                          prev.length <= 1 ? [""] : prev.filter((_, i) => i !== index)
+                        )
+                      }
+                      style={{ fontSize: 12, flexShrink: 0 }}
+                      aria-label={`Remove role ${index + 1}`}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => setRoles((prev) => [...prev, ""])}
+                style={{ marginTop: 8, fontSize: 13 }}
+              >
+                Add role
+              </button>
             </div>
           </>
         )}
         {!isOrganization && (
           <>
             <div>
-              <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Current organization</label>
+              <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Current organizations</label>
               <select
-                value={currentOrgId}
-                onChange={(e) => setCurrentOrgId(e.target.value)}
-                style={{ width: "100%" }}
+                value=""
+                onChange={(e) => {
+                  const id = e.target.value;
+                  if (id && !organizationIds.includes(id)) {
+                    setOrganizationIds((prev) => [...prev, id]);
+                  }
+                  e.target.value = "";
+                }}
+                style={{ width: "100%", marginBottom: 8 }}
+                aria-label="Add organization"
               >
-                <option value="">—</option>
+                <option value="">Add organization…</option>
                 {orgEntities.map((o) => (
-                  <option key={o.id} value={o.id}>{o.name}</option>
+                  <option key={o.id} value={o.id} disabled={organizationIds.includes(o.id)}>
+                    {o.name}
+                  </option>
                 ))}
               </select>
+              {organizationIds.length > 0 && (
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 4 }}>
+                  {organizationIds.map((id) => {
+                    const org = orgEntities.find((o) => o.id === id);
+                    return (
+                      <li
+                        key={id}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          padding: "6px 0",
+                          borderBottom: "1px solid var(--border)",
+                        }}
+                      >
+                        <span>{org?.name ?? id}</span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setOrganizationIds((prev) => prev.filter((x) => x !== id))
+                          }
+                          style={{ fontSize: 12 }}
+                          aria-label={`Remove ${org?.name ?? id}`}
+                        >
+                          Remove
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
             </div>
           </>
         )}

@@ -20,8 +20,8 @@ export interface CreateEntityInput {
   summary?: string;
   attributes?: {
     nationality_iso?: string;
-    current_role?: string;
-    current_organization_entity_id?: string;
+    roles?: string[];
+    current_organization_entity_ids?: string[];
     ein?: string;
     company_type?: string;
   };

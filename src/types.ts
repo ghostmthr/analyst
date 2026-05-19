@@ -69,8 +69,12 @@ export interface Entity {
   summary?: string;
   attributes?: {
     nationality_iso?: string;
+    /** @deprecated Use `roles`. Still read for backward compatibility. */
     current_role?: string;
+    roles?: string[];
+    /** @deprecated Use `current_organization_entity_ids`. Still read for backward compatibility. */
     current_organization_entity_id?: string;
+    current_organization_entity_ids?: string[];
     ein?: string;
     company_type?: string;
   };
