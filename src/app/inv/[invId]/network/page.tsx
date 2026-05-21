@@ -41,38 +41,46 @@ const LAYOUT_OPTIONS: { value: string; label: string }[] = [
 ];
 
 const LAYOUT_PADDING = 50;
-const LAYOUT_SPACING_FACTOR = 1.4;
+const LAYOUT_SPACING_FACTOR = 1.6;
+const SPREAD_OUT_SPACING_MULTIPLIER = 2.25;
 
-function getLayoutOptions(layoutName: string, animate: boolean) {
-  const base = { fit: true, padding: LAYOUT_PADDING, avoidOverlap: true, spacingFactor: LAYOUT_SPACING_FACTOR, animate };
+function getLayoutOptions(layoutName: string, animate: boolean, spacingMultiplier = 1) {
+  const spacingFactor = LAYOUT_SPACING_FACTOR * spacingMultiplier;
+  const base = { fit: true, padding: LAYOUT_PADDING, avoidOverlap: true, spacingFactor, animate };
   if (layoutName === "breadthfirst") {
     return { ...base, name: "breadthfirst", directed: true, grid: true };
   }
+  const minNodeSpacing = Math.round(36 * spacingMultiplier);
   if (layoutName === "pyramid") {
     return {
       ...base,
       name: "concentric",
       sort: (a: { degree: () => number }, b: { degree: () => number }) => b.degree() - a.degree(),
-      minNodeSpacing: 36,
+      minNodeSpacing,
       equidistant: true,
     };
   }
   if (layoutName === "concentric") {
-    return { ...base, name: "concentric", minNodeSpacing: 36, equidistant: true };
+    return { ...base, name: "concentric", minNodeSpacing, equidistant: true };
   }
   if (layoutName === "cose") {
     return {
       ...base,
       name: "cose",
-      idealEdgeLength: 90,
-      nodeRepulsion: 8000,
-      nodeOverlap: 16,
-      componentSpacing: 50,
+      idealEdgeLength: 100 * spacingMultiplier,
+      nodeRepulsion: 8000 * spacingMultiplier,
+      nodeOverlap: 20,
+      componentSpacing: 60 * spacingMultiplier,
       numIter: 1000,
     };
   }
   if (layoutName === "grid") {
-    return { ...base, name: "grid", condense: false, avoidOverlapPadding: 20 };
+    return {
+      ...base,
+      name: "grid",
+      condense: false,
+      avoidOverlapPadding: Math.round(20 * spacingMultiplier),
+    };
   }
   if (layoutName === "circle") {
     return { ...base, name: "circle" };
@@ -139,6 +147,21 @@ export default function NetworkPage() {
     setSelectedNodeId(null);
     setSelectedEdgeId(null);
   }, []);
+
+  const runLayout = useCallback((spacingMultiplier = 1, animate = true) => {
+    const cy = cyRef.current;
+    if (!cy) return;
+    const opts = getLayoutOptions(layoutRef.current, animate, spacingMultiplier);
+    const layoutInstance = cy.layout(opts);
+    layoutInstance.on("layoutstop", () => {
+      cy.fit(undefined, 50);
+    });
+    layoutInstance.run();
+  }, []);
+
+  const handleSpreadOut = useCallback(() => {
+    runLayout(SPREAD_OUT_SPACING_MULTIPLIER);
+  }, [runLayout]);
 
   useEffect(() => {
     if (!invEntities.length || seedEntityId) return;
@@ -266,13 +289,7 @@ export default function NetworkPage() {
         }
       });
       cyRef.current = cy;
-      const currentLayout = layoutRef.current;
-      const layoutOpts = getLayoutOptions(currentLayout, false);
-      const layoutInstance = cy.layout(layoutOpts);
-      layoutInstance.on("layoutstop", () => {
-        cy.fit(undefined, 50);
-      });
-      layoutInstance.run();
+      runLayout(SPREAD_OUT_SPACING_MULTIPLIER, false);
     };
     initCy();
     return () => {
@@ -281,17 +298,12 @@ export default function NetworkPage() {
         cyRef.current = null;
       }
     };
-  }, [elementsResult, subgraph]);
+  }, [elementsResult, subgraph, runLayout]);
 
   useEffect(() => {
     if (!cyRef.current) return;
-    const opts = getLayoutOptions(layout, true);
-    const layoutInstance = cyRef.current.layout(opts);
-    layoutInstance.on("layoutstop", () => {
-      cyRef.current?.fit(undefined, 50);
-    });
-    layoutInstance.run();
-  }, [layout]);
+    runLayout(SPREAD_OUT_SPACING_MULTIPLIER);
+  }, [layout, runLayout]);
 
   useEffect(() => {
     if (!cyRef.current) return;
@@ -425,6 +437,9 @@ export default function NetworkPage() {
             +
           </button>
         </div>
+        <button type="button" onClick={handleSpreadOut} className="analyst-filterControl">
+          SPREAD OUT
+        </button>
         <button type="button" onClick={handleFit} className="analyst-filterControl">
           FIT TO SCREEN
         </button>
