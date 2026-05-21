@@ -6,6 +6,8 @@ import { getEntityAssertionSummary } from "@/lib/derived";
 import { nowUtc } from "@/lib/ids";
 import type { CaseFile } from "@/types";
 
+import { buildReportNetworkGraph } from "./renderNetworkGraphSvg";
+
 export interface ReportParams {
   timelineLimit?: number;
   entityIds?: string[];
@@ -95,6 +97,21 @@ export interface ReportMetadata {
   state_id: string;
 }
 
+export interface ReportNetworkGraph {
+  svg: string;
+  caption: string;
+  seed_entity_name: string;
+  hops: number;
+  node_count: number;
+  edge_count: number;
+  capped?: boolean;
+}
+
+/** Written network analysis prose (rendered before the graph when present). */
+export interface ReportNetworkAnalysis {
+  paragraphs: string[];
+}
+
 export interface ReportModel {
   generated_at: string;
   metadata?: ReportMetadata;
@@ -114,6 +131,8 @@ export interface ReportModel {
   assessment_summary?: ReportAssessmentSummary;
   ach_appendix?: ReportAchAppendix;
   evidence_appendix: ReportEvidenceRef[];
+  network_analysis?: ReportNetworkAnalysis;
+  network_graph?: ReportNetworkGraph;
 }
 
 /**
@@ -345,6 +364,8 @@ export function buildReportModel(
     })
     .sort((a, b) => a.id.localeCompare(b.id));
 
+  const network_graph = buildReportNetworkGraph(caseFile, invId);
+
   return {
     generated_at: metadata?.generated_at ?? nowUtc(),
     metadata,
@@ -363,5 +384,6 @@ export function buildReportModel(
     assessment_summary,
     ach_appendix,
     evidence_appendix,
+    network_graph,
   };
 }

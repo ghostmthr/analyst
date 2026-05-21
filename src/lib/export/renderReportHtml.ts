@@ -22,6 +22,7 @@ const CSS = `
   .judgment { margin: 12px 0; padding: 12px; border-left: 3px solid #3b82f6; background: #f8fafc; }
   .evidence-row { font-family: monospace; font-size: 0.8rem; }
   .sha256 { color: #059669; word-break: break-all; }
+  .network-graph { margin: 16px 0; max-width: 100%; overflow: hidden; border-radius: 4px; border: 1px solid #e5e7eb; page-break-inside: avoid; }
   @media print { body { padding: 16px; } .no-print { display: none; } }
 `;
 
@@ -180,6 +181,25 @@ export function renderReportHtml(model: ReportModel): string {
     parts.push(`</tr>`);
   }
   parts.push(`</tbody></table>`);
+
+  if (model.network_analysis?.paragraphs.length) {
+    parts.push(`<h2>Network analysis</h2>`);
+    for (const paragraph of model.network_analysis.paragraphs) {
+      parts.push(`<p>${esc(paragraph)}</p>`);
+    }
+  }
+
+  if (model.network_graph) {
+    const g = model.network_graph;
+    parts.push(`<h2>Network map</h2>`);
+    if (g.capped) {
+      parts.push(
+        `<p class="meta">Graph capped for report size — use the Network view for the full graph.</p>`
+      );
+    }
+    parts.push(`<p class="meta">${esc(g.caption)}</p>`);
+    parts.push(`<div class="network-graph">${g.svg}</div>`);
+  }
 
   parts.push(`</body></html>`);
   return parts.join("");

@@ -150,6 +150,7 @@ The platform supports the full lifecycle of an investigation:
 npm install
 npm run dev
 
+PDF export uses Playwright and downloads Chromium on `npm install`. If PDF export fails, run `npm run setup:pdf` and restart the dev server.
 
 Then open:
 http://localhost:3000

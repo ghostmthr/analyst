@@ -9,6 +9,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "verify": "npm run typecheck && npm run lint",
+    "setup:pdf": "playwright install chromium",
+    "postinstall": "playwright install chromium",
     "smoke:ach": "npx tsx src/lib/__smoke__/ach_determinism.ts",
     "smoke:patch": "npx tsx src/lib/__smoke__/patch_apply.ts",
     "smoke:integrity": "npx tsx src/lib/__smoke__/integrity_determinism.ts"

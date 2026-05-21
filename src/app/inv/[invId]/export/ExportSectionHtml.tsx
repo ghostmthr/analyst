@@ -106,7 +106,7 @@ export default function ExportSectionHtml({
     <section className="analyst-panel analyst-gap32">
       <h2 className="analyst-h2Section">HTML Report</h2>
       <p className="analyst-textSecondary analyst-gap12">
-        Printable brief with targets, timeline, assessment, and evidence appendix.
+        Printable brief with targets, timeline, assessment, evidence appendix, and network map.
       </p>
       {(pdfBackend === "remote_service" && !remotePdfUrl) && (
         <Banner variant="warn">
@@ -120,7 +120,9 @@ export default function ExportSectionHtml({
           <p className="analyst-gap12" style={{ margin: 0, fontWeight: 500 }}>
             {pdfBackend === "disabled"
               ? "PDF export is disabled. Set ANALYST_PDF_BACKEND=local_playwright to enable."
-              : "PDF generation isn't available in this environment. Use Download HTML and print to PDF."}
+              : pdfBackend === "local_playwright"
+                ? "PDF needs a local Chromium install. In the project folder run: npm run setup:pdf — then refresh this page and try again. Or use Download HTML and print to PDF."
+                : "PDF generation isn't available in this environment. Use Download HTML and print to PDF."}
           </p>
           <div className="analyst-actionsRow">
             <button type="button" className="analyst-button" onClick={handleDownloadReport} disabled={anyLoading}>

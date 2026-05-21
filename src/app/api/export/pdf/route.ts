@@ -73,7 +73,8 @@ export async function POST(req: Request) {
           {
             ok: false,
             code: "PLAYWRIGHT_UNAVAILABLE",
-            message: "PDF generation is not available in this environment. Use Download HTML and print to PDF.",
+            message:
+              "PDF generation requires Chromium. Run: npm run setup:pdf — then retry. Or use Download HTML and print to PDF.",
           },
           { status: 501 }
         );

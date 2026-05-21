@@ -7,27 +7,19 @@ import { useCallback, useEffect,useMemo, useRef, useState } from "react";
 import { useCase } from "@/contexts/CaseContext";
 import { getEntityAssertionSummary } from "@/lib/derived";
 import { getSubgraph, toCytoscapeElements } from "@/lib/graph";
+import { getLayoutOptions, SPREAD_OUT_SPACING_MULTIPLIER } from "@/lib/graphLayout";
+import {
+  BASE_NODE_SIZE,
+  DEFAULT_NODE_COLOR,
+  DEFAULT_NODE_DARK,
+  ENTITY_NODE_COLORS,
+} from "@/lib/graphVisual";
 import { LINK_TYPE_OPTIONS } from "@/lib/labelRegistry";
 import type { RelationshipType } from "@/types";
 
 import NetworkEdgePanel from "./NetworkEdgePanel";
 import NetworkNodePanel from "./NetworkNodePanel";
 
-// Entity-type node colors: base and darker (for selected/hover). Palette tuned to site greens/blues.
-const ENTITY_NODE_COLORS: Record<string, { base: string; dark: string }> = {
-  PERSON: { base: "#29A9E0", dark: "#1a7a9e" },
-  ORG: { base: "#03B791", dark: "#028a6b" },
-  INFRA: { base: "#0d9488", dark: "#0f766e" },
-  ASSET: { base: "#0891b2", dark: "#0e7490" },
-  EVENT: { base: "#059669", dark: "#047857" },
-  FIN_INSTRUMENT: { base: "#06b6d4", dark: "#0891b2" },
-  GOV: { base: "#475569", dark: "#334155" },
-};
-
-const DEFAULT_NODE_COLOR = "#29A9E0";
-const DEFAULT_NODE_DARK = "#1a7a9e";
-
-const BASE_NODE_SIZE = 14;
 const BASE_EDGE_WIDTH = 1;
 const EDGE_ARROW_SCALE = 0.85;
 
@@ -39,54 +31,6 @@ const LAYOUT_OPTIONS: { value: string; label: string }[] = [
   { value: "pyramid", label: "Pyramid" },
   { value: "cose", label: "Organic" },
 ];
-
-const LAYOUT_PADDING = 50;
-const LAYOUT_SPACING_FACTOR = 1.6;
-const SPREAD_OUT_SPACING_MULTIPLIER = 2.25;
-
-function getLayoutOptions(layoutName: string, animate: boolean, spacingMultiplier = 1) {
-  const spacingFactor = LAYOUT_SPACING_FACTOR * spacingMultiplier;
-  const base = { fit: true, padding: LAYOUT_PADDING, avoidOverlap: true, spacingFactor, animate };
-  if (layoutName === "breadthfirst") {
-    return { ...base, name: "breadthfirst", directed: true, grid: true };
-  }
-  const minNodeSpacing = Math.round(36 * spacingMultiplier);
-  if (layoutName === "pyramid") {
-    return {
-      ...base,
-      name: "concentric",
-      sort: (a: { degree: () => number }, b: { degree: () => number }) => b.degree() - a.degree(),
-      minNodeSpacing,
-      equidistant: true,
-    };
-  }
-  if (layoutName === "concentric") {
-    return { ...base, name: "concentric", minNodeSpacing, equidistant: true };
-  }
-  if (layoutName === "cose") {
-    return {
-      ...base,
-      name: "cose",
-      idealEdgeLength: 100 * spacingMultiplier,
-      nodeRepulsion: 8000 * spacingMultiplier,
-      nodeOverlap: 20,
-      componentSpacing: 60 * spacingMultiplier,
-      numIter: 1000,
-    };
-  }
-  if (layoutName === "grid") {
-    return {
-      ...base,
-      name: "grid",
-      condense: false,
-      avoidOverlapPadding: Math.round(20 * spacingMultiplier),
-    };
-  }
-  if (layoutName === "circle") {
-    return { ...base, name: "circle" };
-  }
-  return { ...base, name: layoutName };
-}
 
 export default function NetworkPage() {
   const params = useParams();
